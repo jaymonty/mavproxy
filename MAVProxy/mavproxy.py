@@ -575,7 +575,9 @@ def log_paths():
     if opts.aircraft is not None:
         if opts.mission is not None:
             print(opts.mission)
-            dirname = "%s/logs/%s/Mission%s" % (opts.aircraft, time.strftime("%Y-%m-%d"), opts.mission)
+            dirname = "%s/%s/Mission%s" % (opts.aircraft, time.strftime("%Y-%m-%d"), opts.mission)
+            if opts.sortie is not None:
+                dirname = dirname + "/Sortie%s" % (opts.sortie)
         else:
             dirname = "%s/logs/%s" % (opts.aircraft, time.strftime("%Y-%m-%d"))
         # dirname is currently relative.  Possibly add state_basedir:
@@ -866,6 +868,7 @@ if __name__ == '__main__':
     parser.add_option("--rtscts",  action='store_true', help="enable hardware RTS/CTS flow control")
     parser.add_option("--moddebug",  type=int, help="module debug level", default=0)
     parser.add_option("--mission", dest="mission", help="mission name", default=None)
+    parser.add_option("--sortie", dest="sortie", help="sortie number", default=None)
     parser.add_option("--daemon", action='store_true', help="run in daemon mode, do not start interactive shell")
     parser.add_option("--profile", action='store_true', help="run the Yappi python profiler")
     parser.add_option("--state-basedir", default=None, help="base directory for logs and aircraft directories")
