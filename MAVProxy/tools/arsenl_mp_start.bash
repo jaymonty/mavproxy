@@ -5,4 +5,4 @@ if [ "$#" -ne 4 ]; then
     exit -1
 fi
 
-mavproxy.py --map --console --speech --aircraft Event$1 --mission $2 --sortie $3 --master $4 --baudrate 57600
+mavproxy.py --map --console --speech --aircraft Event$1 --mission $2 --sortie $3 --master $4 --baudrate 57600 --load-module misseditor
