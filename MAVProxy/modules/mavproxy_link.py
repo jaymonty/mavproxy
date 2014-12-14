@@ -308,8 +308,15 @@ class LinkModule(mp_module.MPModule):
             if master.flightmode != self.status.flightmode and time.time() > self.status.last_mode_announce + 2:
                 self.status.flightmode = master.flightmode
                 self.status.last_mode_announce = time.time()
+
+                sysid = self.mav_param.get('SYSID_THISMAV')
+                if sysid is None:
+                    sysid = ""
+                else:
+                    sysid = str(int(sysid)) + ":"
+
                 if self.mpstate.functions.input_handler is None:
-                    self.mpstate.rl.set_prompt(self.status.flightmode + "> ")
+                    self.mpstate.rl.set_prompt(sysid + self.status.flightmode + "> ")
                 self.say("Mode " + self.status.flightmode)
 
             if m.type == mavutil.mavlink.MAV_TYPE_FIXED_WING:
