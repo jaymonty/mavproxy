@@ -34,7 +34,9 @@ class ParamState:
                 added_new_parameter = False
             if m.param_count != -1:
                 self.mav_param_count = m.param_count
+
             self.mav_param[str(param_id)] = m.param_value
+
             if self.fetch_one > 0:
                 self.fetch_one -= 1
                 print("%s = %f" % (param_id, m.param_value))
@@ -42,6 +44,8 @@ class ParamState:
                 print("Received %u parameters" % m.param_count)
                 if self.logdir != None:
                     self.mav_param.save(os.path.join(self.logdir, self.parm_file), '*', verbose=True)
+
+            return (str(param_id), m.param_value)
 
     def fetch_check(self, master):
         '''check for missing parameters periodically'''
@@ -234,7 +238,11 @@ class ParamModule(mp_module.MPModule):
 
     def mavlink_packet(self, m):
         '''handle an incoming mavlink packet'''
-        self.pstate.handle_mavlink_packet(self.master, m)
+        param_changed = self.pstate.handle_mavlink_packet(self.master, m)
+       
+        #hack to put plane's sysid in front of mode on prompt
+        if param_changed != None and param_changed[0].upper() == "SYSID_THISMAV":
+            self.mpstate.rl.set_prompt(str(int(param_changed[1])) + ":" + self.status.flightmode + "> ")
 
     def idle_task(self):
         '''handle missing parameters'''
